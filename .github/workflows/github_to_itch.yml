@@ -40,7 +40,7 @@ jobs:
  
   - name: Download Export Templates
     run: |
-   curl -L -o export_templates.zip https://github.com/godotengine/godot/releases/download/4.4-stable/Godot_v4.4-stable_export_templates.tpz
+     curl -L -o export_templates.zip https://github.com/godotengine/godot/releases/download/4.4-stable/Godot_v4.4-stable_export_templates.tpz
      unzip export_templates.zip
   
   - name: Install Export Templates
