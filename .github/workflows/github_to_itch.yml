@@ -33,10 +33,10 @@ jobs:
   - name: Download + Authorize Godot
     run: |
      curl -L -o godot.zip https://github.com/godotengine/godot/releases/download/4.4-stable/Godot_v4.4-stable_linux.x86_64.zip
-       unzip godot.zip
-       mv Godot_v4.4-stable_linux.x86_64 godot
-       ls
-       chmod +x godot
+     unzip godot.zip
+     mv Godot_v4.4-stable_linux.x86_64 godot
+     ls
+     chmod +x godot
  
   - name: Download Export Templates
     run: |
@@ -132,19 +132,33 @@ Publish:
   if: ${{ contains(github.ref, 'main') }}
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/download-artifact@v4
+    - name: Download VERSION artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: VERSION
+        path: ./
+
+    - name: Get version from VERSION.txt
+      id: get_version
+      run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_ENV
+
+    - name: Download exports artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: exports
+        path: exports
 
     - name: List Downloaded Artifacts
       run: ls -l exports
 
     - name: Zip Windows Export
-      run: zip -r release-windows-${{ steps.tag_version.outputs.new_tag }}.zip exports/windows
+      run: zip -r release-windows-${{ env.VERSION }}.zip exports/windows
 
     - name: Zip Linux Export
-      run: zip -r release-linux-${{ steps.tag_version.outputs.new_tag }}.zip exports/linux
+      run: zip -r release-linux-${{ env.VERSION }}.zip exports/linux
 
     - name: Zip Web Export
-      run: zip -r release-web-${{ steps.tag_version.outputs.new_tag }}.zip exports/web
+      run: zip -r release-web-${{ env.VERSION }}.zip exports/web
 
     - name: Download + Authorize Butler
       run: |
@@ -157,14 +171,13 @@ Publish:
       run: ./butler login
 
     - name: Push Windows Export to Itch.io
-      run: ./butler push ./release-windows-${{ steps.tag_version.outputs.new_tag }}.zip eclipsinglines/psychomycotic:windows
+      run: ./butler push ./release-windows-${{ env.VERSION }}.zip eclipsinglines/psychomycotic:windows
 
     - name: Push Linux Export to Itch.io
-      run: ./butler push ./release-linux-${{ steps.tag_version.outputs.new_tag }}.zip eclipsinglines/psychomycotic:linux
+      run: ./butler push ./release-linux-${{ env.VERSION }}.zip eclipsinglines/psychomycotic:linux
 
     - name: Push Web Export to Itch.io
-      run: ./butler push ./release-web-${{ steps.tag_version.outputs.new_tag }}.zip eclipsinglines/psychomycotic:web
-
+      run: ./butler push ./release-web-${{ env.VERSION }}.zip eclipsinglines/psychomycotic:web
 
  Cleanup:
   needs: [Export, Release, Publish]
