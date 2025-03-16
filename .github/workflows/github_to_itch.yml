@@ -32,7 +32,7 @@ jobs:
   
   - name: Download + Authorize Godot
     run: |
-       curl -L -o godot.zip https://github.com/godotengine/godot/releases/download/4.4-stable/Godot_v4.4-stable_linux.x86_64.zip
+     curl -L -o godot.zip https://github.com/godotengine/godot/releases/download/4.4-stable/Godot_v4.4-stable_linux.x86_64.zip
        unzip godot.zip
        mv Godot_v4.4-stable_linux.x86_64 godot
        ls
@@ -40,7 +40,7 @@ jobs:
  
   - name: Download Export Templates
     run: |
-     curl -L -o export_templates.zip https://github.com/godotengine/godot/releases/download/4.4-stable/Godot_v4.4-stable_export_templates.tpz
+   curl -L -o export_templates.zip https://github.com/godotengine/godot/releases/download/4.4-stable/Godot_v4.4-stable_export_templates.tpz
      unzip export_templates.zip
   
   - name: Install Export Templates
@@ -55,8 +55,8 @@ jobs:
     
   - name: Export Web
     run: |
-     mkdir -p ./
-     ./godot --headless --path ./ --export-release "Web" ./
+     mkdir -p ./exports
+     ./godot --headless --path ./ --export-release "HTML5" ./exports/GWJ-79 Psychomycotic.html
     
   - name: Export macOS
     run: |
@@ -68,8 +68,8 @@ jobs:
      mkdir -p ./
      ./godot --headless --path ./ --export-release "Linux" ./
     
-  - name: Upload Artifacts
-    uses: actions/upload-artifact@v4
+
+  - uses: actions/upload-artifact@v2
     with:
      name: exports
      path: exports
@@ -125,8 +125,8 @@ jobs:
        filepath: ./VERSION.txt
        content: ${{ steps.tag_version.outputs.new_version }}
        mode: 0655
-    
-    - uses: actions/upload-artifact@v2
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
       with:
        name: VERSION
        path: ./VERSION.txt

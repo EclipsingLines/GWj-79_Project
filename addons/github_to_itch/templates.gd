@@ -3,11 +3,11 @@ extends RefCounted
 
 ## Helper script to render the workflow yml file
 
-const workflow_template_path:String = "res://addons/github_to_itch/tempaltes/workflow_template.yml"
-const export_template_path:String = "res://addons/github_to_itch/tempaltes/export.yml"
+const workflow_template_path: String = "res://addons/github_to_itch/tempaltes/workflow_template.yml"
+const export_template_path: String = "res://addons/github_to_itch/tempaltes/export.yml"
 
 const ITCH_CHANNEL_MAP = {
-	"HTML5": "web",
+	"Web": "web",
 	"Windows Desktop": "win",
 	"Android": "android",
 	"iOS": "ios", # not an official channel of itch
@@ -16,13 +16,13 @@ const ITCH_CHANNEL_MAP = {
 	"UWP": "uwp" # not an official channel of itch
 }
 
-var export_template:String = """  - name: Export {PLATFORM}
+var export_template: String = """  - name: Export {PLATFORM}
 	run: |
 	 mkdir -p ./{EXPORT_PATH}
 	 ./godot --headless --path ./ --export-release "{NAME}" ./{EXPORT_FILE}
 	
 """.replace("\t", "    ")
-var uploads_template:String = """	- name: Push {PLATFORM} to Itch
+var uploads_template: String = """	- name: Push {PLATFORM} to Itch
 	  run: ./butler push {EXPORT_PATH} {ITCH_USERNAME}/{ITCH_PROJECT_NAME}:{ITCH_CHANNEL} --userversion-file ./VERSION/VERSION.txt
 	
 """.replace("\t", "    ")
@@ -42,7 +42,7 @@ static func get_project_name() -> String:
 	return ProjectSettings.get("application/config/name")
 
 static func get_exports() -> Array[Dictionary]:
-	var res:Array[Dictionary] = []
+	var res: Array[Dictionary] = []
 	var config := ConfigFile.new()
 	config.load("res://export_presets.cfg")
 	var needs_saving = false
@@ -50,7 +50,7 @@ static func get_exports() -> Array[Dictionary]:
 	for section in config.get_sections():
 		if config.has_section_key(section, "exclude_filter"):
 			# Set addon to be excluded
-			var exclude_filter:String = config.get_value(section, "exclude_filter", "")
+			var exclude_filter: String = config.get_value(section, "exclude_filter", "")
 			var parts = exclude_filter.split(",", false)
 			if not "addons/github_to_itch/*" in parts:
 				parts.append("addons/github_to_itch/*")
@@ -72,10 +72,9 @@ static func get_exports() -> Array[Dictionary]:
 	return res
 
 func exports() -> String:
-	
 	var exports = get_exports()
 	
-	var res:PackedStringArray
+	var res: PackedStringArray
 	for export in exports:
 		res.append(export_template.format({
 			NAME = export.name,
@@ -91,12 +90,13 @@ func uploads() -> String:
 	var ITCH_USERNAME = ProjectSettings.get_setting("github_to_itch/config/itch_username")
 	var ITCH_PROJECT_NAME = ProjectSettings.get_setting("github_to_itch/config/itch_project_name")
 	
-	var res:PackedStringArray
+	var res: PackedStringArray
 	for export in exports:
+		print(export.platform)
 		res.append(uploads_template.format({
 			PLATFORM = export.platform,
 			EXPORT_PATH = "./" + export.export_path.get_base_dir(),
-			ITCH_CHANNEL = ITCH_CHANNEL_MAP[export.platform],
+			ITCH_CHANNEL = ITCH_CHANNEL_MAP[ export.platform],
 			ITCH_USERNAME = ITCH_USERNAME.to_lower(),
 			ITCH_PROJECT_NAME = ITCH_PROJECT_NAME.to_lower()
 		}))
