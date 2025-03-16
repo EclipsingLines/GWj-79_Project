@@ -127,7 +127,7 @@ jobs:
        name: VERSION
        path: ./VERSION.txt
  
- Publish:
+Publish:
   needs: Release
   if: ${{ contains(github.ref, 'main') }}
   runs-on: ubuntu-latest
@@ -136,19 +136,35 @@ jobs:
 
     - name: List Downloaded Artifacts
       run: ls -l exports
-    
+
+    - name: Zip Windows Export
+      run: zip -r release-windows-${{ steps.tag_version.outputs.new_tag }}.zip exports/windows
+
+    - name: Zip Linux Export
+      run: zip -r release-linux-${{ steps.tag_version.outputs.new_tag }}.zip exports/linux
+
+    - name: Zip Web Export
+      run: zip -r release-web-${{ steps.tag_version.outputs.new_tag }}.zip exports/web
+
     - name: Download + Authorize Butler
       run: |
-       curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
-       unzip butler.zip
-       chmod +x butler
-       ./butler -V
-    
+        curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+        unzip butler.zip
+        chmod +x butler
+        ./butler -V
+
     - name: Login To Butler
-      run: |
-       ./butler login
-       ./butler push ./exports/release-${{ steps.tag_version.outputs.new_tag }}.zip eclipsinglines/psychomycotic:win-linux-html5
-    
+      run: ./butler login
+
+    - name: Push Windows Export to Itch.io
+      run: ./butler push ./release-windows-${{ steps.tag_version.outputs.new_tag }}.zip eclipsinglines/psychomycotic:windows
+
+    - name: Push Linux Export to Itch.io
+      run: ./butler push ./release-linux-${{ steps.tag_version.outputs.new_tag }}.zip eclipsinglines/psychomycotic:linux
+
+    - name: Push Web Export to Itch.io
+      run: ./butler push ./release-web-${{ steps.tag_version.outputs.new_tag }}.zip eclipsinglines/psychomycotic:web
+
 
  Cleanup:
   needs: [Export, Release, Publish]
