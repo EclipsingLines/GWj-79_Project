@@ -144,7 +144,7 @@ jobs:
     - name: Login To Butler
       run: |
        ./butler login
-       ./butler push release-${{ steps.tag_version.outputs.new_tag }}.zip user/game:psychomycotic
+       ./butler push release-${{ steps.tag_version.outputs.new_tag }}.zip eclipsinglines/psychomycotic:win-linux-html5
     
 
  Cleanup:
