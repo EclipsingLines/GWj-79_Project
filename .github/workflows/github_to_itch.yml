@@ -68,8 +68,8 @@ jobs:
      mkdir -p ./
      ./godot --headless --path ./ --export-release "Linux" ./
     
-
-  - uses: actions/upload-artifact@v2
+  - name: Upload Artifacts
+    uses: actions/upload-artifact@v4
     with:
      name: exports
      path: exports
