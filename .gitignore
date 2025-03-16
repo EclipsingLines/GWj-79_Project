@@ -6,6 +6,9 @@
 export.cfg
 export_credentials.cfg
 
+# Ignore local exports
+.exports/
+
 # Imported translations (automatically generated from CSV files)
 *.translation
 
