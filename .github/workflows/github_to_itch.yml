@@ -53,8 +53,8 @@ jobs:
      mkdir -p ./
      ./godot --headless --path ./ --export-release "Windows Desktop" ./
     
-
-  - uses: actions/upload-artifact@v2
+  - name: Upload Artifact
+  - uses: actions/upload-artifact@v4
     with:
      name: exports
      path: exports
