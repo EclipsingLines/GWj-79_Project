@@ -56,7 +56,7 @@ jobs:
   - name: Export Web
     run: |
       mkdir -p ./exports/web
-      ./godot --headless --path ./ --export-release "HTML5" ./exports/web/GWJ-79_Psychomycotic.html
+      ./godot --headless --path ./ --export-release "HTML5" ./exports/web/index.html
 
   - name: Export Linux
     run: |
