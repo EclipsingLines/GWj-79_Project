@@ -127,7 +127,7 @@ jobs:
        name: VERSION
        path: ./VERSION.txt
  
-Publish:
+ Publish:
   needs: Release
   if: ${{ contains(github.ref, 'main') }}
   runs-on: ubuntu-latest
@@ -179,7 +179,7 @@ Publish:
     - name: Push Web Export to Itch.io
       run: ./butler push ./release-web-${{ env.VERSION }}.zip eclipsinglines/psychomycotic:web
 
-Cleanup:
+ Cleanup:
   needs: [Export, Release, Publish]
   runs-on: ubuntu-latest
   steps:
