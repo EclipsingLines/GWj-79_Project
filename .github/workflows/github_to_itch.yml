@@ -53,8 +53,23 @@ jobs:
      mkdir -p ./
      ./godot --headless --path ./ --export-release "Windows Desktop" ./
     
-  - name: Upload Artifact
-    uses: actions/upload-artifact@v4
+  - name: Export Web
+    run: |
+     mkdir -p ./
+     ./godot --headless --path ./ --export-release "Web" ./
+    
+  - name: Export macOS
+    run: |
+     mkdir -p ./
+     ./godot --headless --path ./ --export-release "macOS" ./
+    
+  - name: Export Linux
+    run: |
+     mkdir -p ./
+     ./godot --headless --path ./ --export-release "Linux" ./
+    
+
+  - uses: actions/upload-artifact@v2
     with:
      name: exports
      path: exports
@@ -132,9 +147,6 @@ jobs:
     
     - name: Login To Butler
       run: ./butler login
-    
-    - name: Push Windows Desktop to Itch
-      run: ./butler push ./ eclipsinglines/psychomycotic:win --userversion-file ./VERSION/VERSION.txt
     
 
  Cleanup:
