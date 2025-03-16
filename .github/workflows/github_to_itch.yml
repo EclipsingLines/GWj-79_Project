@@ -152,13 +152,19 @@ jobs:
       run: ls -l exports
 
     - name: Zip Windows Export
-      run: zip -r release-windows-${{ env.VERSION }}.zip exports/windows
+      run: |
+        cd exports/windows
+        zip -r ../../release-windows-${{ env.VERSION }}.zip .
 
     - name: Zip Linux Export
-      run: zip -r release-linux-${{ env.VERSION }}.zip exports/linux
+      run: |
+        cd exports/linux
+        zip -r ../../release-linux-${{ env.VERSION }}.zip .
 
     - name: Zip Web Export
-      run: zip -r release-web-${{ env.VERSION }}.zip exports/web
+      run: |
+        cd exports/web
+        zip -r ../../release-web-${{ env.VERSION }}.zip .
 
     - name: Download + Authorize Butler
       run: |
