@@ -21,7 +21,7 @@ enabled=PackedStringArray("res://addons/github_to_itch/plugin.cfg")
 
 [github_to_itch]
 
-config/itch_username="eclipsinglines"
+config/itch_username="EclipsingLines"
 config/itch_project_name="psychomycotic"
 
 [rendering]
